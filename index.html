@@ -303,6 +303,62 @@
             animation: coreIconPulse 1.1s infinite ease-in-out;
         }
 
+        /* Sweet Rose-Gold Celebration Flash Screen */
+        @keyframes sweetFlashBg {
+            0%, 100% {
+                background: radial-gradient(circle at center, rgba(244, 114, 182, 0.92) 0%, rgba(192, 132, 252, 0.94) 52%, rgba(25, 10, 35, 0.98) 100%);
+                box-shadow: inset 0 0 120px rgba(251, 113, 133, 0.85);
+            }
+            50% {
+                background: radial-gradient(circle at center, rgba(251, 146, 60, 0.88) 0%, rgba(236, 72, 153, 0.94) 55%, rgba(25, 10, 35, 0.98) 100%);
+                box-shadow: inset 0 0 150px rgba(244, 114, 182, 0.95);
+            }
+        }
+
+        .sweet-celebration-screen {
+            animation: sweetFlashBg 2.2s infinite ease-in-out;
+            backdrop-filter: blur(28px) saturate(190%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%);
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(40px) scale(0.75) rotate(-8deg);
+                opacity: 0;
+            }
+            35% {
+                opacity: 0.95;
+            }
+            100% {
+                transform: translateY(-140px) scale(1.25) rotate(12deg);
+                opacity: 0;
+            }
+        }
+
+        .floating-sweet-particle {
+            position: absolute;
+            pointer-events: none;
+            animation: floatHeart 3.2s infinite ease-in-out;
+        }
+
+        /* 20-Second Missed Medicine Buzzer Screen */
+        @keyframes missedBuzzStrobe {
+            0%, 100% {
+                background: radial-gradient(circle at center, rgba(245, 158, 11, 0.92) 0%, rgba(225, 29, 72, 0.95) 58%, rgba(10, 6, 12, 0.98) 100%);
+                box-shadow: inset 0 0 130px rgba(245, 158, 11, 0.85);
+            }
+            50% {
+                background: radial-gradient(circle at center, rgba(239, 68, 68, 0.95) 0%, rgba(124, 45, 18, 0.96) 58%, rgba(10, 6, 12, 0.98) 100%);
+                box-shadow: inset 0 0 160px rgba(239, 68, 68, 0.92);
+            }
+        }
+
+        .missed-buzz-screen {
+            animation: missedBuzzStrobe 0.65s infinite ease-in-out;
+            backdrop-filter: blur(28px) saturate(190%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%);
+        }
+
         /* Smooth View Transitions */
         .view-section {
             animation: springFadeIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -372,11 +428,16 @@
             </div>
 
             <div class="flex items-center gap-2">
-                <!-- APK & Lock-Screen Overlay Setup Button -->
-                <button onclick="openApkModal()" class="btn-luxury px-3.5 py-2.5 rounded-2xl text-white text-xs font-bold flex items-center gap-1.5 shadow-lg">
-                    <i class="ph-fill ph-android-logo text-base"></i>
-                    <span>APK & Overlay</span>
-                </button>
+                <!-- Sleek App Icon Studio Button (Can be dismissed or used anytime to download 512x512 PNG for WebIntoApp) -->
+                <div id="icon-btn-group" class="flex items-center gap-1">
+                    <button onclick="openIconStudio()" class="btn-luxury px-3 py-2 rounded-2xl text-white text-xs font-bold flex items-center gap-1.5 shadow-lg" title="Download 512x512 App Icon PNG for WebIntoApp">
+                        <i class="ph-fill ph-app-window text-base"></i>
+                        <span>App Icon</span>
+                    </button>
+                    <button onclick="hideIconBtnGroup()" class="w-7 h-7 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-slate-400 hover:text-white flex items-center justify-center text-[10px]" title="Hide Icon Button">
+                        <i class="ph-bold ph-x"></i>
+                    </button>
+                </div>
             </div>
         </header>
 
@@ -701,12 +762,23 @@
                 <div class="glass-panel rounded-3xl p-5">
                     <div class="flex items-center justify-between gap-4">
                         <div>
-                            <span class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">Daily Adherence</span>
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">Daily Adherence</span>
+                                <span id="med-reset-date-badge" class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-400/30">Resets 12:00 AM</span>
+                            </div>
                             <h2 class="text-xl font-extrabold text-white mt-2">Medicine Cabinet</h2>
                             <p id="med-summary-text" class="text-xs text-slate-300 mt-0.5">0 of 0 doses taken today</p>
-                            <button onclick="resetDailyMedicines()" class="mt-3 btn-glass px-3 py-1.5 rounded-xl text-xs font-semibold text-cyan-300 flex items-center gap-1.5">
-                                <i class="ph-bold ph-arrow-counter-clockwise"></i> Reset New Day
-                            </button>
+                            <div class="flex items-center gap-1.5 flex-wrap mt-3">
+                                <button onclick="resetDailyMedicines()" class="btn-glass px-2.5 py-1.5 rounded-xl text-[11px] font-semibold text-cyan-300 flex items-center gap-1">
+                                    <i class="ph-bold ph-arrow-counter-clockwise"></i> Reset Day
+                                </button>
+                                <button onclick="triggerSweetMealCelebration('breakfast', true)" class="btn-glass px-2.5 py-1.5 rounded-xl text-[11px] font-semibold text-pink-300 border border-pink-400/30 flex items-center gap-1">
+                                    <i class="ph-fill ph-heart"></i> Test Sweet Flash
+                                </button>
+                                <button onclick="triggerMissedMedicineBuzzer('breakfast', true)" class="btn-glass px-2.5 py-1.5 rounded-xl text-[11px] font-semibold text-amber-300 border border-amber-400/30 flex items-center gap-1">
+                                    <i class="ph-fill ph-bell-ringing"></i> Test 20s Buzz
+                                </button>
+                            </div>
                         </div>
 
                         <!-- Animated SVG Progress Ring -->
@@ -780,8 +852,11 @@
                                     <i class="ph-fill ph-coffee text-lg"></i>
                                 </div>
                                 <div>
-                                    <h4 class="text-sm font-bold text-white">Breakfast Medicines</h4>
-                                    <p class="text-[11px] text-slate-400">Morning Dose • 8:00 AM - 10:00 AM</p>
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="text-sm font-bold text-white">Breakfast Medicines</h4>
+                                        <span id="status-pill-breakfast" class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30">Limit: 11:00 AM</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400">Morning Dose • Auto-buzz if missed after 11:00 AM</p>
                                 </div>
                             </div>
                             <span id="badge-breakfast" class="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-white/10 text-amber-300">0/0</span>
@@ -796,8 +871,11 @@
                                     <i class="ph-fill ph-sun text-lg"></i>
                                 </div>
                                 <div>
-                                    <h4 class="text-sm font-bold text-white">Lunch Medicines</h4>
-                                    <p class="text-[11px] text-slate-400">Midday Dose • 1:30 PM - 2:30 PM</p>
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="text-sm font-bold text-white">Lunch Medicines</h4>
+                                        <span id="status-pill-lunch" class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">Limit: 3:30 PM</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400">Midday Dose • Auto-buzz if missed after 3:30 PM</p>
                                 </div>
                             </div>
                             <span id="badge-lunch" class="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-white/10 text-cyan-300">0/0</span>
@@ -812,8 +890,11 @@
                                     <i class="ph-fill ph-moon-stars text-lg"></i>
                                 </div>
                                 <div>
-                                    <h4 class="text-sm font-bold text-white">Dinner Medicines</h4>
-                                    <p class="text-[11px] text-slate-400">Night Dose • 9:00 PM - 10:30 PM</p>
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="text-sm font-bold text-white">Dinner Medicines</h4>
+                                        <span id="status-pill-dinner" class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">Limit: 11:00 PM</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400">Night Dose • Auto-buzz if missed after 11:00 PM</p>
                                 </div>
                             </div>
                             <span id="badge-dinner" class="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-white/10 text-indigo-300">0/0</span>
@@ -889,81 +970,172 @@
 
     </div>
 
-    <!-- ================= APK & SYSTEM OVERLAY INSTALLER MODAL ================= -->
-    <div id="apk-modal" class="hidden fixed inset-0 z-[9999] bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4 overflow-y-auto">
-        <div class="glass-panel w-full max-w-md rounded-3xl p-5 border border-white/25 relative my-auto max-h-[90dvh] overflow-y-auto">
-            <button onclick="closeApkModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-slate-300 hover:text-white">
+    <!-- ================= SWEET ROSE-GOLD MEAL COMPLETION FLASH OVERLAY ================= -->
+    <div id="sweet-celebration-overlay" onclick="closeSweetCelebration()" class="hidden fixed inset-0 w-screen h-[100dvh] z-[99998] sweet-celebration-screen flex flex-col items-center justify-center px-6 overflow-hidden select-none cursor-pointer">
+        <!-- Floating Romantic Sparkles & Hearts -->
+        <div class="floating-sweet-particle text-4xl" style="left: 14%; bottom: 18%; animation-delay: 0s;">💖</div>
+        <div class="floating-sweet-particle text-3xl" style="left: 82%; bottom: 22%; animation-delay: 0.5s;">✨</div>
+        <div class="floating-sweet-particle text-4xl" style="left: 24%; bottom: 12%; animation-delay: 1.1s;">🌸</div>
+        <div class="floating-sweet-particle text-3xl" style="left: 74%; bottom: 15%; animation-delay: 1.6s;">💕</div>
+        <div class="floating-sweet-particle text-3xl" style="left: 48%; bottom: 10%; animation-delay: 0.8s;">🌷</div>
+
+        <div class="glass-panel rounded-3xl p-7 max-w-sm w-full text-center border border-pink-200/40 shadow-2xl relative overflow-hidden animate-[springFadeIn_0.4s_ease]">
+            <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-pink-400 via-rose-400 to-amber-300 flex items-center justify-center shadow-xl shadow-rose-500/40 border-2 border-white/60">
+                <i class="ph-fill ph-heart text-white text-4xl animate-bounce"></i>
+            </div>
+
+            <span id="sweet-meal-badge" class="inline-block text-[11px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full bg-white/20 text-white border border-white/30 mb-3">
+                BREAKFAST COMPLETE ✨
+            </span>
+
+            <h2 id="sweet-message-title" class="text-2xl font-extrabold text-white leading-snug drop-shadow mb-2">
+                You're Doing Amazing! 💖
+            </h2>
+
+            <p id="sweet-message-body" class="text-sm text-pink-50 font-medium leading-relaxed mb-6">
+                All your medicines for this meal are taken! So proud of you for taking such sweet care of your health today. Stay happy and glowing always! 🌸✨
+            </p>
+
+            <!-- Glowing Heart Orb Dismiss Button -->
+            <button type="button" onclick="closeSweetCelebration()" class="mx-auto w-14 h-14 rounded-full bg-white/25 hover:bg-white/35 border-2 border-white/60 flex items-center justify-center text-white shadow-lg transition active:scale-90">
+                <i class="ph-fill ph-check-fat text-2xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= 20-SECOND MISSED MEDICINE DEADLINE BUZZER OVERLAY ================= -->
+    <div id="missed-med-overlay" class="hidden fixed inset-0 w-screen h-[100dvh] z-[99999] missed-buzz-screen flex flex-col items-center justify-center px-6 overflow-hidden select-none">
+        <div class="glass-panel rounded-3xl p-6 max-w-sm w-full text-center border border-amber-300/40 shadow-2xl animate-[springFadeIn_0.35s_ease]">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-rose-500/30 border border-rose-300/40 text-amber-200 text-[11px] font-mono font-bold uppercase tracking-widest mb-3">
+                <span class="w-2 h-2 rounded-full bg-amber-300 animate-ping"></span>
+                <span id="missed-slot-deadline-label">DEADLINE PASSED • 20s BUZZER</span>
+            </div>
+
+            <h2 id="missed-overlay-title" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight mb-2">
+                Missed Breakfast Medicine!
+            </h2>
+            <p class="text-xs text-amber-100/90 mb-4">
+                Time limit crossed! Please take your pending dose right away:
+            </p>
+
+            <!-- Untaken Medicines List -->
+            <div id="missed-meds-list" class="space-y-2 mb-5 text-left max-h-36 overflow-y-auto px-1"></div>
+
+            <!-- 20-Second Auto-Stop Countdown Indicator + Sonic Silence Orb -->
+            <div class="flex flex-col items-center justify-center my-2">
+                <div class="relative w-28 h-28 flex items-center justify-center">
+                    <div class="sonic-wave"></div>
+                    <div class="orb-conic-ring"></div>
+                    <button type="button" onclick="stopMissedMedicineBuzzer()" aria-label="Silence 20s Buzzer" class="orb-core-btn !w-24 !h-24">
+                        <div class="flex flex-col items-center justify-center">
+                            <i class="ph-fill ph-bell-slash text-white text-3xl"></i>
+                            <span id="missed-buzz-countdown" class="text-xs font-mono font-extrabold text-cyan-300 mt-0.5">20s</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <button type="button" onclick="markMissedSlotAllTakenNow()" class="mt-4 btn-luxury w-full py-3.5 rounded-2xl font-bold text-sm text-white flex items-center justify-center gap-2 shadow-xl">
+                <i class="ph-bold ph-check-circle text-lg"></i>
+                <span>I Took Them Now • Mark Complete</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= 512x512 APP ICON STUDIO MODAL (FOR WEBINTOAPP) ================= -->
+    <div id="icon-studio-modal" class="hidden fixed inset-0 z-[9999] bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4 overflow-y-auto">
+        <div class="glass-panel w-full max-w-md rounded-3xl p-5 border border-white/25 relative my-auto max-h-[92dvh] overflow-y-auto">
+            <button onclick="closeIconStudio()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-slate-300 hover:text-white transition">
                 <i class="ph-bold ph-x"></i>
             </button>
 
             <div class="flex items-center gap-3 mb-4">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center text-white text-2xl shadow-lg shrink-0">
-                    <i class="ph-fill ph-android-logo"></i>
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl shadow-lg shrink-0 border border-white/30">
+                    <i class="ph-fill ph-sparkle"></i>
                 </div>
                 <div>
-                    <h3 class="text-base font-extrabold text-white">Full Android APK & Lock-Screen Engine</h3>
-                    <p class="text-xs text-cyan-300">Background Wake, Lock-Screen & Display Over Apps</p>
+                    <div class="flex items-center gap-1.5">
+                        <h3 class="text-base font-extrabold text-white">AuraOS App Icon Studio</h3>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">512×512 PNG</span>
+                    </div>
+                    <p class="text-xs text-slate-300">Ready for WebIntoApp.com & Android Home Screen</p>
                 </div>
             </div>
 
-            <div class="space-y-3 text-xs text-slate-200 leading-relaxed">
-                <!-- Background Audio & Notification Permission Activator -->
-                <div class="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-400/30">
-                    <div class="flex items-center justify-between mb-1.5">
-                        <span class="font-bold text-emerald-300 text-xs flex items-center gap-1.5">
-                            <i class="ph-fill ph-lock-key-open"></i> 1. Activate Background & Lock-Screen Engine
-                        </span>
-                        <span id="modal-guard-status" class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Ready</span>
-                    </div>
-                    <p class="text-slate-300 text-[11px] mb-2.5">Keeps a sub-audible hardware audio lock + Screen WakeLock + high-priority Android Heads-Up Notification active so alarms sound even when your screen is locked or you are in another app.</p>
-                    <button onclick="enableBackgroundGuard(true)" class="btn-luxury w-full py-2.5 rounded-xl font-bold text-white flex items-center justify-center gap-2">
-                        <i class="ph-bold ph-shield-check"></i> Grant Lock-Screen & Background Permissions
+            <!-- Live High-Res Canvas Preview -->
+            <div class="flex flex-col items-center justify-center p-4 rounded-3xl bg-black/45 border border-white/15 mb-4 relative overflow-hidden">
+                <div class="absolute -top-12 -left-12 w-32 h-32 bg-cyan-500/20 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl pointer-events-none"></div>
+
+                <canvas id="app-icon-canvas" width="512" height="512" class="w-40 h-40 sm:w-44 sm:h-44 rounded-3xl shadow-2xl border border-white/20 transition-transform duration-300 hover:scale-105"></canvas>
+
+                <!-- Mask Shape Toggle -->
+                <div class="flex items-center gap-2 mt-3.5 bg-white/5 p-1 rounded-2xl border border-white/10">
+                    <button type="button" onclick="setIconShape('squircle')" id="shape-squircle" class="px-3 py-1.5 rounded-xl text-[11px] font-bold bg-cyan-500/25 text-cyan-300 border border-cyan-400/40 transition">
+                        Rounded Squircle
                     </button>
-                </div>
-
-                <!-- Standalone App File Download -->
-                <div class="p-3.5 rounded-2xl bg-white/5 border border-white/15">
-                    <h4 class="font-bold text-cyan-300 text-xs mb-1 flex items-center gap-1.5">
-                        <i class="ph-fill ph-download-simple"></i> 2. Install Standalone App / Build Signed APK
-                    </h4>
-                    <p class="text-slate-300 text-[11px] mb-2.5">Download the self-contained app package below. Open it in Chrome on Android and tap <strong>"Install App"</strong>, or upload it to <strong>WebIntoApp.com</strong> / <strong>PWABuilder.com</strong> for an instant `.apk`.</p>
-                    <button onclick="triggerNativePwaPrompt()" class="btn-glass w-full py-2.5 rounded-xl font-bold text-cyan-300 border border-cyan-400/30 flex items-center justify-center gap-2">
-                        <i class="ph-bold ph-file-html"></i> Download AuraOS Standalone Package (.html)
+                    <button type="button" onclick="setIconShape('square')" id="shape-square" class="px-3 py-1.5 rounded-xl text-[11px] font-bold text-slate-400 hover:text-white transition">
+                        Full Square (WebIntoApp)
                     </button>
-                </div>
-
-                <!-- Native Android Studio Kotlin SYSTEM_ALERT_WINDOW Wrapper -->
-                <div class="p-3.5 rounded-2xl bg-white/5 border border-white/15">
-                    <div class="flex items-center justify-between mb-1">
-                        <h4 class="font-bold text-purple-300 text-xs flex items-center gap-1.5">
-                            <i class="ph-fill ph-code"></i> 3. Native Android "Display Over Other Apps" Bridge
-                        </h4>
-                        <button onclick="copyKotlinBridge()" class="text-[11px] font-bold text-cyan-300 hover:underline flex items-center gap-1">
-                            <i class="ph-bold ph-copy"></i> Copy Kotlin
-                        </button>
-                    </div>
-                    <p class="text-slate-400 text-[11px] mb-2">Includes `SYSTEM_ALERT_WINDOW`, `USE_FULL_SCREEN_INTENT`, and `showWhenLocked = true` so the native APK flashes directly over any app or locked screen:</p>
-                    <pre id="kotlin-bridge-code" class="bg-black/60 border border-white/10 rounded-xl p-2.5 text-[10px] font-mono text-cyan-200 overflow-x-auto max-h-28 select-all">// AndroidManifest.xml Permissions:
-&lt;uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/&gt;
-&lt;uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/&gt;
-&lt;uses-permission android:name="android.permission.WAKE_LOCK"/&gt;
-&lt;uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/&gt;
-
-// MainActivity.kt Lock-Screen &amp; Over-App Wake:
-if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.O_MR1) {
-    setShowWhenLocked(true)
-    setTurnScreenOn(true)
-}
-window.addFlags(
-    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
-    WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
-)</pre>
                 </div>
             </div>
 
-            <button onclick="closeApkModal()" class="mt-4 btn-glass w-full py-3 rounded-2xl font-bold text-xs text-white">
-                Close Window
-            </button>
+            <!-- 4 Custom Flagship Icon Styles -->
+            <div class="mb-4">
+                <label class="text-[11px] uppercase tracking-wider text-slate-400 font-bold block mb-2">Choose Icon Design Style</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" onclick="selectIconStyle(1)" id="style-btn-1" class="p-2.5 rounded-2xl text-left border transition-all bg-cyan-500/20 border-cyan-400/50 text-white">
+                        <div class="flex items-center justify-between mb-0.5">
+                            <span class="text-xs font-bold text-cyan-300">1. Aura Glass Core</span>
+                            <i class="ph-fill ph-clock-countdown text-cyan-300"></i>
+                        </div>
+                        <p class="text-[10px] text-slate-300">Neon Pulse Clock + Weather Sun</p>
+                    </button>
+
+                    <button type="button" onclick="selectIconStyle(2)" id="style-btn-2" class="p-2.5 rounded-2xl text-left border transition-all bg-white/5 border-white/10 text-slate-300 hover:border-white/25">
+                        <div class="flex items-center justify-between mb-0.5">
+                            <span class="text-xs font-bold">2. All-in-One Hub</span>
+                            <i class="ph-fill ph-squares-four text-emerald-300"></i>
+                        </div>
+                        <p class="text-[10px] text-slate-400">Clock • Weather • Alarm • Pill</p>
+                    </button>
+
+                    <button type="button" onclick="selectIconStyle(3)" id="style-btn-3" class="p-2.5 rounded-2xl text-left border transition-all bg-white/5 border-white/10 text-slate-300 hover:border-white/25">
+                        <div class="flex items-center justify-between mb-0.5">
+                            <span class="text-xs font-bold">3. Sonic Alarm Orb</span>
+                            <i class="ph-fill ph-bell-ringing text-rose-300"></i>
+                        </div>
+                        <p class="text-[10px] text-slate-400">Futuristic Cyber Sonic Emblem</p>
+                    </button>
+
+                    <button type="button" onclick="selectIconStyle(4)" id="style-btn-4" class="p-2.5 rounded-2xl text-left border transition-all bg-white/5 border-white/10 text-slate-300 hover:border-white/25">
+                        <div class="flex items-center justify-between mb-0.5">
+                            <span class="text-xs font-bold">4. Minimal Crest</span>
+                            <i class="ph-fill ph-sparkle text-purple-300"></i>
+                        </div>
+                        <p class="text-[10px] text-slate-400">Flagship 'A' Glass Monogram</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 1-Click PNG Download Actions -->
+            <div class="space-y-2.5">
+                <button type="button" onclick="downloadAppIcon(512)" class="btn-luxury w-full py-3.5 rounded-2xl font-bold text-sm text-white flex items-center justify-center gap-2 shadow-xl">
+                    <i class="ph-bold ph-download-simple text-lg"></i>
+                    <span>Download 512×512 PNG (For WebIntoApp)</span>
+                </button>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" onclick="downloadAppIcon(1024)" class="btn-glass py-2.5 rounded-xl font-bold text-xs text-cyan-300 flex items-center justify-center gap-1.5">
+                        <i class="ph-bold ph-high-definition text-base"></i>
+                        <span>1024×1024 HD PNG</span>
+                    </button>
+                    <button type="button" onclick="closeIconStudio()" class="btn-glass py-2.5 rounded-xl font-bold text-xs text-white flex items-center justify-center gap-1.5">
+                        <i class="ph-bold ph-check text-emerald-400"></i>
+                        <span>Done • Go to App</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -981,7 +1153,49 @@ window.addFlags(
          ********************************************************************/
         const STORAGE_KEYS = {
             REMINDERS: 'aura_ctg_reminders_v1',
-            MEDICINES: 'aura_ctg_medicines_v1'
+            MEDICINES: 'aura_ctg_medicines_v1',
+            MED_RESET_DATE: 'aura_ctg_med_reset_date_v1',
+            MED_META_STATE: 'aura_ctg_med_meta_v1'
+        };
+
+        // Meal Deadlines: Breakfast 11:00 AM, Lunch 3:30 PM (15:30), Dinner 11:00 PM (23:00)
+        const MEAL_DEADLINES = {
+            breakfast: { hour: 11, minute: 0, label: '11:00 AM', title: 'Breakfast' },
+            lunch: { hour: 15, minute: 30, label: '3:30 PM', title: 'Lunch' },
+            dinner: { hour: 23, minute: 0, label: '11:00 PM', title: 'Dinner' }
+        };
+
+        const SWEET_MESSAGES = {
+            breakfast: [
+                {
+                    title: "Morning Sunshine & Health! 💖✨",
+                    body: "All your Breakfast medicines are complete! So proud of you for starting your morning by taking care of yourself. Have the sweetest, brightest day ahead! 🌸☀️"
+                },
+                {
+                    title: "Breakfast Dose Done! 🌷💕",
+                    body: "You took all your morning medicines on time! Keep shining with that beautiful energy all day long. You are deeply cared for! ✨💖"
+                }
+            ],
+            lunch: [
+                {
+                    title: "Midday Care Complete! 🌸💫",
+                    body: "All your Lunch medicines are taken! Thank you for never skipping a beat with your health. Stay happy, hydrated, and glowing always! 💖✨"
+                },
+                {
+                    title: "So Proud of You! 💕🌟",
+                    body: "Lunch dose is 100% done! Your health and smile mean everything—keep taking such wonderful care of yourself today! 🌺✨"
+                }
+            ],
+            dinner: [
+                {
+                    title: "Night Dose Complete! 🌙💖",
+                    body: "All your Dinner medicines are done for tonight! You did amazing today—now relax, unwind, and have the sweetest, most peaceful sleep! ✨💕"
+                },
+                {
+                    title: "Sweet Dreams Ahead! 🌟🌷",
+                    body: "100% of your Dinner medicines taken! Rest easy knowing you took great care of yourself today. Goodnight & stay blessed! 💖🌙"
+                }
+            ]
         };
 
         let reminders = [];
@@ -990,17 +1204,40 @@ window.addFlags(
         let selectedAddSlot = 'breakfast';
         let selectedMedInstruction = 'After Meal';
 
-        // Web Audio API Continuous Alarm Synthesizer & Background Keep-Alive State
+        // Daily Meta State (Resets automatically at 12:00 AM Midnight)
+        let dailyMedMeta = {
+            celebratedMeals: { breakfast: false, lunch: false, dinner: false },
+            missedAlertTriggered: { breakfast: false, lunch: false, dinner: false }
+        };
+
+        // Web Audio API Continuous Alarm Synthesizer, 20s Missed Buzzer & Background Keep-Alive State
         let audioCtx = null;
         let alarmIntervalId = null;
         let isAlarmRinging = false;
+        let bgNotificationRepeatId = null;
+
+        // 20-Second Missed Medicine Buzzer State
+        let missedBuzzIntervalId = null;
+        let missedBuzzCountdownId = null;
+        let missedBuzzSecondsLeft = 20;
+        let currentMissedSlot = null;
+        let sweetCelebrationTimeoutId = null;
+
         let keepAliveNode = null;
         let wakeLockSentinel = null;
         let swRegistration = null;
 
+        function getTodayLocalDateKey() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
         // Default Pre-loaded Medicines
         const DEFAULT_MEDICINES = [
-            { id: 'm1', name: 'Pantonix 20mg', dose: '1 Capsule', slot: 'breakfast', instruction: 'Before Meal', taken: true, takenAt: '08:15 AM' },
+            { id: 'm1', name: 'Pantonix 20mg', dose: '1 Capsule', slot: 'breakfast', instruction: 'Before Meal', taken: false, takenAt: null },
             { id: 'm2', name: 'Multivitamin Gold', dose: '1 Tablet', slot: 'breakfast', instruction: 'After Meal', taken: false, takenAt: null },
             { id: 'm3', name: 'Napa Extend 665mg', dose: '1 Tablet', slot: 'lunch', instruction: 'After Meal', taken: false, takenAt: null },
             { id: 'm4', name: 'Calcium + Vit D3', dose: '500mg Tab', slot: 'lunch', instruction: 'After Meal', taken: false, takenAt: null },
@@ -1034,9 +1271,17 @@ window.addFlags(
                     medicines = DEFAULT_MEDICINES;
                     saveMedicines();
                 }
+
+                const savedMeta = localStorage.getItem(STORAGE_KEYS.MED_META_STATE);
+                if (savedMeta) {
+                    dailyMedMeta = JSON.parse(savedMeta);
+                }
             } catch (e) {
                 medicines = DEFAULT_MEDICINES;
             }
+
+            // Immediately verify if 12:00 AM Midnight has crossed since last visit
+            checkAutomaticMidnightMedicineReset();
         }
 
         function saveReminders() {
@@ -1049,6 +1294,45 @@ window.addFlags(
             try {
                 localStorage.setItem(STORAGE_KEYS.MEDICINES, JSON.stringify(medicines));
             } catch (e) {}
+        }
+
+        function saveDailyMedMeta() {
+            try {
+                localStorage.setItem(STORAGE_KEYS.MED_META_STATE, JSON.stringify(dailyMedMeta));
+            } catch (e) {}
+        }
+
+        /********************************************************************
+         * 1B. AUTOMATIC 12:00 AM MIDNIGHT MEDICINE RESET ENGINE
+         ********************************************************************/
+        function checkAutomaticMidnightMedicineReset() {
+            const todayKey = getTodayLocalDateKey();
+            const lastResetDate = localStorage.getItem(STORAGE_KEYS.MED_RESET_DATE);
+
+            const badgeEl = document.getElementById('med-reset-date-badge');
+            if (badgeEl) {
+                badgeEl.textContent = `Today: ${todayKey} • 12AM Auto-Reset`;
+            }
+
+            if (lastResetDate !== todayKey) {
+                // Midnight crossed or new day started! Reset all medicine markings & daily flags
+                medicines.forEach(m => {
+                    m.taken = false;
+                    m.takenAt = null;
+                });
+                dailyMedMeta = {
+                    celebratedMeals: { breakfast: false, lunch: false, dinner: false },
+                    missedAlertTriggered: { breakfast: false, lunch: false, dinner: false }
+                };
+                localStorage.setItem(STORAGE_KEYS.MED_RESET_DATE, todayKey);
+                saveMedicines();
+                saveDailyMedMeta();
+                renderMedicines();
+
+                if (lastResetDate) {
+                    showToast('12:00 AM New Day! All medicines reset for today ✨', 'ph-sparkle');
+                }
+            }
         }
 
         /********************************************************************
@@ -1135,18 +1419,22 @@ window.addFlags(
                 } catch (e) {}
             }
 
-            const statusEl = document.getElementById('modal-guard-status');
-            if (statusEl) statusEl.textContent = 'Active ✓';
-
             if (showFeedback) {
-                showToast('Lock-Screen & Background Alarm Guard Active!', 'ph-shield-check');
+                showToast('Background & Lock-Screen Guard Armed!', 'ph-shield-check');
             }
         }
 
-        function fireSystemOverAppNotification(reminderTitle) {
+        function fireSystemOverAppNotification(reminderTitle, bodyText = 'Tap to bring AuraOS to front & silence the flashing screen.') {
+            // Try native Android WebView bridge if present in wrapper
+            try {
+                if (window.Android && typeof window.Android.bringToFront === 'function') {
+                    window.Android.bringToFront();
+                }
+            } catch (e) {}
+
             if (!('Notification' in window) || Notification.permission !== 'granted') return;
             const options = {
-                body: 'Tap to open AuraOS & silence the flashing alarm.',
+                body: bodyText,
                 tag: 'auraos-alarm-alert',
                 renotify: true,
                 requireInteraction: true,
@@ -1154,9 +1442,9 @@ window.addFlags(
             };
             try {
                 if (swRegistration && swRegistration.showNotification) {
-                    swRegistration.showNotification(`⏰ ${reminderTitle}`, options);
+                    swRegistration.showNotification(`🚨 ${reminderTitle}`, options);
                 } else {
-                    const n = new Notification(`⏰ ${reminderTitle}`, options);
+                    const n = new Notification(`🚨 ${reminderTitle}`, options);
                     n.onclick = () => {
                         window.focus();
                         n.close();
@@ -1169,7 +1457,9 @@ window.addFlags(
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
                 requestScreenWakeLock();
+                checkAutomaticMidnightMedicineReset();
                 tickReminders();
+                checkMissedMedicineDeadlines();
             }
         });
 
@@ -1525,7 +1815,7 @@ window.addFlags(
             document.getElementById('alarm-fullscreen-overlay').classList.remove('hidden');
 
             // Trigger OS-level Heads-Up / Over-App Notification & Wake
-            fireSystemOverAppNotification(reminderTitle);
+            fireSystemOverAppNotification(reminderTitle, 'Tap this banner to flash AuraOS on screen & press the Sonic Orb!');
             window.focus();
 
             if (isAlarmRinging) return;
@@ -1535,6 +1825,14 @@ window.addFlags(
             alarmIntervalId = setInterval(() => {
                 playAlarmChimeBurst();
             }, 820);
+
+            // Repeat high-priority Heads-Up popup every 4 seconds while user is outside the app
+            if (bgNotificationRepeatId) clearInterval(bgNotificationRepeatId);
+            bgNotificationRepeatId = setInterval(() => {
+                if (isAlarmRinging && document.visibilityState !== 'visible') {
+                    fireSystemOverAppNotification(reminderTitle, 'ALARM RINGING! Tap here to open the flashing stop screen.');
+                }
+            }, 4000);
         }
 
         function stopActiveAlarm() {
@@ -1543,12 +1841,239 @@ window.addFlags(
                 clearInterval(alarmIntervalId);
                 alarmIntervalId = null;
             }
+            if (bgNotificationRepeatId) {
+                clearInterval(bgNotificationRepeatId);
+                bgNotificationRepeatId = null;
+            }
             if (navigator.vibrate) {
                 navigator.vibrate(0);
             }
             playSoftSuccessPop();
             document.getElementById('alarm-fullscreen-overlay').classList.add('hidden');
             showToast('Alarm silenced', 'ph-check-circle');
+        }
+
+        /********************************************************************
+         * 6B. SWEET ROSE-GOLD MEAL COMPLETION CELEBRATION ENGINE
+         ********************************************************************/
+        function playSweetCelebrationMelody() {
+            unlockAudioContext();
+            if (!audioCtx) return;
+
+            const now = audioCtx.currentTime;
+            // Warm romantic major9 arpeggio chime (C5 -> E5 -> G5 -> B5 -> D6 -> G6)
+            const notes = [523.25, 659.25, 783.99, 987.77, 1174.66, 1567.98];
+
+            notes.forEach((freq, idx) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now + idx * 0.10);
+
+                gain.gain.setValueAtTime(0.001, now + idx * 0.10);
+                gain.gain.exponentialRampToValueAtTime(0.28, now + idx * 0.10 + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.10 + 0.45);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start(now + idx * 0.10);
+                osc.stop(now + idx * 0.10 + 0.46);
+            });
+
+            if (navigator.vibrate) {
+                navigator.vibrate([80, 60, 140]);
+            }
+        }
+
+        function triggerSweetMealCelebration(slot, isManualTest = false) {
+            const messages = SWEET_MESSAGES[slot] || SWEET_MESSAGES.breakfast;
+            const chosen = messages[Math.floor(Math.random() * messages.length)];
+
+            document.getElementById('sweet-meal-badge').textContent = `${slot.toUpperCase()} MEDICINES COMPLETE ✨`;
+            document.getElementById('sweet-message-title').textContent = chosen.title;
+            document.getElementById('sweet-message-body').textContent = chosen.body;
+
+            const overlay = document.getElementById('sweet-celebration-overlay');
+            overlay.classList.remove('hidden');
+
+            playSweetCelebrationMelody();
+
+            if (!isManualTest) {
+                dailyMedMeta.celebratedMeals[slot] = true;
+                saveDailyMedMeta();
+            }
+
+            if (sweetCelebrationTimeoutId) clearTimeout(sweetCelebrationTimeoutId);
+            sweetCelebrationTimeoutId = setTimeout(() => {
+                closeSweetCelebration();
+            }, 5200);
+        }
+
+        function closeSweetCelebration() {
+            if (sweetCelebrationTimeoutId) {
+                clearTimeout(sweetCelebrationTimeoutId);
+                sweetCelebrationTimeoutId = null;
+            }
+            document.getElementById('sweet-celebration-overlay').classList.add('hidden');
+        }
+
+        /********************************************************************
+         * 6C. MISSED MEDICINE DEADLINE ENGINE & 20-SECOND BUZZER
+         * Deadlines: Breakfast 11:00 AM, Lunch 3:30 PM (15:30), Dinner 11:00 PM (23:00)
+         ********************************************************************/
+        function playMissedBuzzerPulse() {
+            unlockAudioContext();
+            if (!audioCtx) return;
+
+            const now = audioCtx.currentTime;
+            // Distinct double-pulse urgent medical buzzer (sawtooth + square harmonic)
+            [0, 0.22].forEach(offset => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(620, now + offset);
+                osc.frequency.setValueAtTime(480, now + offset + 0.08);
+
+                gain.gain.setValueAtTime(0.001, now + offset);
+                gain.gain.exponentialRampToValueAtTime(0.36, now + offset + 0.015);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.16);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start(now + offset);
+                osc.stop(now + offset + 0.17);
+            });
+
+            if (navigator.vibrate) {
+                navigator.vibrate([260, 90, 260]);
+            }
+        }
+
+        function checkMissedMedicineDeadlines() {
+            const now = new Date();
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+            ['breakfast', 'lunch', 'dinner'].forEach(slot => {
+                const deadline = MEAL_DEADLINES[slot];
+                const deadlineMinutes = deadline.hour * 60 + deadline.minute;
+                const slotMeds = medicines.filter(m => m.slot === slot);
+                const untakenMeds = slotMeds.filter(m => !m.taken);
+
+                if (
+                    slotMeds.length > 0 &&
+                    untakenMeds.length > 0 &&
+                    currentMinutes >= deadlineMinutes &&
+                    !dailyMedMeta.missedAlertTriggered[slot]
+                ) {
+                    dailyMedMeta.missedAlertTriggered[slot] = true;
+                    saveDailyMedMeta();
+                    triggerMissedMedicineBuzzer(slot, false);
+                }
+            });
+        }
+
+        function triggerMissedMedicineBuzzer(slot, isManualTest = false) {
+            currentMissedSlot = slot;
+            const deadlineInfo = MEAL_DEADLINES[slot] || MEAL_DEADLINES.breakfast;
+            const slotMeds = medicines.filter(m => m.slot === slot);
+            const untakenMeds = slotMeds.filter(m => !m.taken);
+            const displayMeds = untakenMeds.length > 0 ? untakenMeds : slotMeds;
+
+            document.getElementById('missed-slot-deadline-label').textContent = `LIMIT ${deadlineInfo.label} PASSED • 20S BUZZER`;
+            document.getElementById('missed-overlay-title').textContent = `Missed ${deadlineInfo.title} Medicine!`;
+
+            const listEl = document.getElementById('missed-meds-list');
+            if (displayMeds.length === 0) {
+                listEl.innerHTML = `<div class="p-3 rounded-2xl bg-black/35 border border-white/15 text-xs text-white text-center">No pending medicines in ${deadlineInfo.title}.</div>`;
+            } else {
+                listEl.innerHTML = displayMeds.map(m => `
+                    <div class="p-2.5 rounded-xl bg-black/40 border border-white/20 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <i class="ph-fill ph-pill text-amber-300"></i>
+                            <span class="text-xs font-bold text-white">${escapeHtml(m.name)}</span>
+                        </div>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-amber-200">${escapeHtml(m.dose)}</span>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('missed-med-overlay').classList.remove('hidden');
+
+            // Clear any running buzzer timers before starting fresh 20-second cycle
+            if (missedBuzzIntervalId) clearInterval(missedBuzzIntervalId);
+            if (missedBuzzCountdownId) clearInterval(missedBuzzCountdownId);
+
+            missedBuzzSecondsLeft = 20;
+            document.getElementById('missed-buzz-countdown').textContent = `${missedBuzzSecondsLeft}s`;
+
+            fireSystemOverAppNotification(
+                `Missed ${deadlineInfo.title} Medicine! (${deadlineInfo.label})`,
+                `You have untaken ${deadlineInfo.title} medicines! Buzzing for 20 seconds—tap to take now.`
+            );
+
+            playMissedBuzzerPulse();
+            missedBuzzIntervalId = setInterval(() => {
+                playMissedBuzzerPulse();
+            }, 900);
+
+            missedBuzzCountdownId = setInterval(() => {
+                missedBuzzSecondsLeft -= 1;
+                const countEl = document.getElementById('missed-buzz-countdown');
+                if (countEl) countEl.textContent = `${Math.max(0, missedBuzzSecondsLeft)}s`;
+
+                if (missedBuzzSecondsLeft % 5 === 0 && document.visibilityState !== 'visible') {
+                    fireSystemOverAppNotification(
+                        `Missed ${deadlineInfo.title} Medicine! (${missedBuzzSecondsLeft}s left)`,
+                        `Tap to open AuraOS and mark your ${deadlineInfo.title} medicine taken.`
+                    );
+                }
+
+                // Automatically stop buzzing after 20 seconds
+                if (missedBuzzSecondsLeft <= 0) {
+                    stopMissedMedicineBuzzer(true);
+                }
+            }, 1000);
+        }
+
+        function stopMissedMedicineBuzzer(autoStoppedAfter20s = false) {
+            if (missedBuzzIntervalId) {
+                clearInterval(missedBuzzIntervalId);
+                missedBuzzIntervalId = null;
+            }
+            if (missedBuzzCountdownId) {
+                clearInterval(missedBuzzCountdownId);
+                missedBuzzCountdownId = null;
+            }
+            if (navigator.vibrate) {
+                navigator.vibrate(0);
+            }
+            document.getElementById('missed-med-overlay').classList.add('hidden');
+            if (autoStoppedAfter20s) {
+                showToast('20s Missed Medicine Buzzer finished', 'ph-bell-slash');
+            } else {
+                showToast('Missed medicine buzzer silenced', 'ph-check-circle');
+            }
+        }
+
+        function markMissedSlotAllTakenNow() {
+            const slot = currentMissedSlot || 'breakfast';
+            const nowTimeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            medicines.forEach(m => {
+                if (m.slot === slot && !m.taken) {
+                    m.taken = true;
+                    m.takenAt = nowTimeStr;
+                }
+            });
+
+            stopMissedMedicineBuzzer(false);
+            saveMedicines();
+            renderMedicines();
+            triggerSweetMealCelebration(slot, false);
         }
 
         /********************************************************************
@@ -1619,12 +2144,25 @@ window.addFlags(
             if (!med) return;
 
             med.taken = !med.taken;
+            const slot = med.slot;
+
             if (med.taken) {
                 med.takenAt = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                playSoftSuccessPop();
-                showToast(`Marked "${med.name}" as Taken!`, 'ph-check-circle');
+
+                // Check if ALL medicines in this meal slot (breakfast/lunch/dinner) are now completed!
+                const slotMeds = medicines.filter(m => m.slot === slot);
+                const allSlotTaken = slotMeds.length > 0 && slotMeds.every(m => m.taken);
+
+                if (allSlotTaken) {
+                    triggerSweetMealCelebration(slot, false);
+                } else {
+                    playSoftSuccessPop();
+                    showToast(`Marked "${med.name}" as Taken!`, 'ph-check-circle');
+                }
             } else {
                 med.takenAt = null;
+                dailyMedMeta.celebratedMeals[slot] = false;
+                saveDailyMedMeta();
             }
 
             saveMedicines();
@@ -1643,7 +2181,13 @@ window.addFlags(
                 m.taken = false;
                 m.takenAt = null;
             });
+            dailyMedMeta = {
+                celebratedMeals: { breakfast: false, lunch: false, dinner: false },
+                missedAlertTriggered: { breakfast: false, lunch: false, dinner: false }
+            };
+            localStorage.setItem(STORAGE_KEYS.MED_RESET_DATE, getTodayLocalDateKey());
             saveMedicines();
+            saveDailyMedMeta();
             renderMedicines();
             showToast('All daily medicine statuses reset for a new day!', 'ph-arrows-clockwise');
         }
@@ -1740,10 +2284,30 @@ window.addFlags(
                 dashListEl.innerHTML = dashMeds.map(renderMedicineItemHTML).join('');
             }
 
+            const now = new Date();
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
             ['breakfast', 'lunch', 'dinner'].forEach(slot => {
                 const slotMeds = medicines.filter(m => m.slot === slot);
                 const slotTaken = slotMeds.filter(m => m.taken).length;
                 document.getElementById(`badge-${slot}`).textContent = `${slotTaken}/${slotMeds.length} Taken`;
+
+                // Update Deadline Status Pill
+                const statusPill = document.getElementById(`status-pill-${slot}`);
+                const deadline = MEAL_DEADLINES[slot];
+                const deadlineMins = deadline.hour * 60 + deadline.minute;
+                if (statusPill) {
+                    if (slotMeds.length > 0 && slotTaken === slotMeds.length) {
+                        statusPill.className = 'text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-emerald-500/25 text-emerald-300 border border-emerald-400/40';
+                        statusPill.textContent = `✓ Done • Sweet!`;
+                    } else if (slotMeds.length > 0 && currentMinutes >= deadlineMins) {
+                        statusPill.className = 'text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-rose-500/30 text-rose-300 border border-rose-400/50 animate-pulse';
+                        statusPill.textContent = `Overdue (${deadline.label})`;
+                    } else {
+                        statusPill.className = 'text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-white/10 text-slate-300 border border-white/15';
+                        statusPill.textContent = `Limit: ${deadline.label}`;
+                    }
+                }
 
                 const container = document.getElementById(`list-${slot}`);
                 if (slotMeds.length === 0) {
@@ -1755,8 +2319,11 @@ window.addFlags(
         }
 
         /********************************************************************
-         * 8. NAVIGATION, APK EXPORT & UI HELPERS
+         * 8. NAVIGATION & 512x512 APP ICON STUDIO GENERATOR
          ********************************************************************/
+        let currentIconStyle = 1;
+        let currentIconShape = 'squircle';
+
         function switchTab(tabName) {
             const tabs = ['dashboard', 'reminders', 'medicine'];
             tabs.forEach(t => {
@@ -1773,37 +2340,356 @@ window.addFlags(
             document.getElementById('main-scroll').scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function openApkModal() {
-            document.getElementById('apk-modal').classList.remove('hidden');
+        function openIconStudio() {
+            document.getElementById('icon-studio-modal').classList.remove('hidden');
+            renderAppIconCanvas(512);
         }
 
-        function closeApkModal() {
-            document.getElementById('apk-modal').classList.add('hidden');
+        function closeIconStudio() {
+            document.getElementById('icon-studio-modal').classList.add('hidden');
         }
 
-        function copyKotlinBridge() {
-            const codeEl = document.getElementById('kotlin-bridge-code');
-            const textarea = document.createElement('textarea');
-            textarea.value = codeEl.innerText;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            showToast('Native Android Overlay code copied!', 'ph-copy');
+        function hideIconBtnGroup() {
+            const group = document.getElementById('icon-btn-group');
+            if (group) group.classList.add('hidden');
+            showToast('Top icon button hidden for clean UI', 'ph-eye-slash');
         }
 
-        function triggerNativePwaPrompt() {
-            const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-            const blob = new Blob([htmlContent], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'AuraOS_Chittagong_Dashboard_App.html';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showToast('Standalone Android App Package downloaded!', 'ph-download-simple');
+        function setIconShape(shape) {
+            currentIconShape = shape;
+            const sqBtn = document.getElementById('shape-squircle');
+            const fullBtn = document.getElementById('shape-square');
+            const canvasEl = document.getElementById('app-icon-canvas');
+
+            if (shape === 'squircle') {
+                sqBtn.className = 'px-3 py-1.5 rounded-xl text-[11px] font-bold bg-cyan-500/25 text-cyan-300 border border-cyan-400/40 transition';
+                fullBtn.className = 'px-3 py-1.5 rounded-xl text-[11px] font-bold text-slate-400 hover:text-white transition';
+                canvasEl.classList.add('rounded-3xl');
+                canvasEl.classList.remove('rounded-none');
+            } else {
+                fullBtn.className = 'px-3 py-1.5 rounded-xl text-[11px] font-bold bg-cyan-500/25 text-cyan-300 border border-cyan-400/40 transition';
+                sqBtn.className = 'px-3 py-1.5 rounded-xl text-[11px] font-bold text-slate-400 hover:text-white transition';
+                canvasEl.classList.remove('rounded-3xl');
+                canvasEl.classList.add('rounded-none');
+            }
+            renderAppIconCanvas(512);
+        }
+
+        function selectIconStyle(styleNum) {
+            currentIconStyle = styleNum;
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.getElementById(`style-btn-${i}`);
+                if (!btn) continue;
+                if (i === styleNum) {
+                    btn.className = 'p-2.5 rounded-2xl text-left border transition-all bg-cyan-500/20 border-cyan-400/50 text-white shadow-lg';
+                } else {
+                    btn.className = 'p-2.5 rounded-2xl text-left border transition-all bg-white/5 border-white/10 text-slate-300 hover:border-white/25';
+                }
+            }
+            renderAppIconCanvas(512);
+        }
+
+        function drawRoundedRectPath(ctx, x, y, w, h, r) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + w - r, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+            ctx.lineTo(x + w, y + h - r);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            ctx.lineTo(x + r, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+            ctx.lineTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+            ctx.closePath();
+        }
+
+        function renderAppIconCanvas(size = 512, targetCanvas = null) {
+            const canvas = targetCanvas || document.getElementById('app-icon-canvas');
+            if (!canvas) return;
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            const scale = size / 512;
+
+            ctx.clearRect(0, 0, size, size);
+            ctx.save();
+            ctx.scale(scale, scale);
+
+            // 1. Base Clipping Mask (Squircle vs Full Square for WebIntoApp)
+            const radius = currentIconShape === 'squircle' ? 116 : 0;
+            drawRoundedRectPath(ctx, 0, 0, 512, 512, radius);
+            ctx.clip();
+
+            // 2. Deep Luxury Obsidian Space Background
+            const bgGrad = ctx.createLinearGradient(0, 0, 512, 512);
+            bgGrad.addColorStop(0, '#050814');
+            bgGrad.addColorStop(0.5, '#0b132b');
+            bgGrad.addColorStop(1, '#04060d');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, 512, 512);
+
+            // Ambient Aurora Orbs
+            const orb1 = ctx.createRadialGradient(110, 100, 10, 110, 100, 260);
+            orb1.addColorStop(0, 'rgba(6, 182, 212, 0.55)');
+            orb1.addColorStop(1, 'rgba(6, 182, 212, 0)');
+            ctx.fillStyle = orb1;
+            ctx.fillRect(0, 0, 512, 512);
+
+            const orb2 = ctx.createRadialGradient(410, 420, 10, 410, 420, 270);
+            orb2.addColorStop(0, 'rgba(168, 85, 247, 0.52)');
+            orb2.addColorStop(1, 'rgba(236, 72, 153, 0)');
+            ctx.fillStyle = orb2;
+            ctx.fillRect(0, 0, 512, 512);
+
+            // Subtle Inner Frosted Glass Plate
+            drawRoundedRectPath(ctx, 36, 36, 440, 440, currentIconShape === 'squircle' ? 92 : 64);
+            const glassGrad = ctx.createLinearGradient(36, 36, 476, 476);
+            glassGrad.addColorStop(0, 'rgba(255, 255, 255, 0.14)');
+            glassGrad.addColorStop(1, 'rgba(255, 255, 255, 0.03)');
+            ctx.fillStyle = glassGrad;
+            ctx.fill();
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
+            ctx.stroke();
+
+            // 3. Draw Selected Flagship Style
+            if (currentIconStyle === 1) {
+                // STYLE 1: AURA GLASS CORE (Pulse Clock + Chittagong Sun + Glowing Core)
+                // Outer Track
+                ctx.beginPath();
+                ctx.arc(256, 256, 158, 0, Math.PI * 2);
+                ctx.lineWidth = 22;
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+                ctx.stroke();
+
+                // Neon Cyan-Blue Progress Arc
+                ctx.beginPath();
+                ctx.arc(256, 256, 158, -Math.PI * 0.5, Math.PI * 0.85);
+                const arcGrad1 = ctx.createLinearGradient(90, 90, 420, 420);
+                arcGrad1.addColorStop(0, '#22d3ee');
+                arcGrad1.addColorStop(0.5, '#3b82f6');
+                arcGrad1.addColorStop(1, '#a855f7');
+                ctx.lineWidth = 22;
+                ctx.lineCap = 'round';
+                ctx.shadowColor = 'rgba(34, 211, 238, 0.65)';
+                ctx.shadowBlur = 24;
+                ctx.strokeStyle = arcGrad1;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+
+                // Inner Purple-Rose Ring
+                ctx.beginPath();
+                ctx.arc(256, 256, 118, -Math.PI * 0.5, Math.PI * 0.4);
+                const arcGrad2 = ctx.createLinearGradient(140, 140, 370, 370);
+                arcGrad2.addColorStop(0, '#f43f5e');
+                arcGrad2.addColorStop(1, '#f59e0b');
+                ctx.lineWidth = 14;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = arcGrad2;
+                ctx.stroke();
+
+                // Warm Golden Weather Sun Orb (Top Right Accent)
+                const sunGrad = ctx.createRadialGradient(345, 165, 4, 345, 165, 34);
+                sunGrad.addColorStop(0, '#fde047');
+                sunGrad.addColorStop(1, '#f59e0b');
+                ctx.beginPath();
+                ctx.arc(345, 165, 28, 0, Math.PI * 2);
+                ctx.fillStyle = sunGrad;
+                ctx.shadowColor = 'rgba(245, 158, 11, 0.75)';
+                ctx.shadowBlur = 20;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                // Clock Hands & Center Jewel
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 14;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(256, 256);
+                ctx.lineTo(256, 168);
+                ctx.moveTo(256, 256);
+                ctx.lineTo(318, 286);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(256, 256, 16, 0, Math.PI * 2);
+                ctx.fillStyle = '#22d3ee';
+                ctx.fill();
+                ctx.lineWidth = 5;
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+
+            } else if (currentIconStyle === 2) {
+                // STYLE 2: ALL-IN-ONE HUB (4 Glowing Glass Quadrants: Clock, Weather, Alarm, Pill)
+                const boxes = [
+                    { x: 86, y: 86, color1: '#06b6d4', color2: '#3b82f6', type: 'clock' },
+                    { x: 266, y: 86, color1: '#f59e0b', color2: '#ec4899', type: 'weather' },
+                    { x: 86, y: 266, color1: '#f43f5e', color2: '#a855f7', type: 'alarm' },
+                    { x: 266, y: 266, color1: '#10b981', color2: '#06b6d4', type: 'pill' }
+                ];
+
+                boxes.forEach(b => {
+                    drawRoundedRectPath(ctx, b.x, b.y, 160, 160, 42);
+                    const g = ctx.createLinearGradient(b.x, b.y, b.x + 160, b.y + 160);
+                    g.addColorStop(0, b.color1);
+                    g.addColorStop(1, b.color2);
+                    ctx.fillStyle = g;
+                    ctx.shadowColor = b.color1;
+                    ctx.shadowBlur = 18;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+                    ctx.stroke();
+
+                    const cx = b.x + 80;
+                    const cy = b.y + 80;
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.fillStyle = '#ffffff';
+                    ctx.lineWidth = 9;
+                    ctx.lineCap = 'round';
+
+                    if (b.type === 'clock') {
+                        ctx.beginPath();
+                        ctx.arc(cx, cy, 42, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(cx, cy);
+                        ctx.lineTo(cx, cy - 22);
+                        ctx.moveTo(cx, cy);
+                        ctx.lineTo(cx + 18, cy + 10);
+                        ctx.stroke();
+                    } else if (b.type === 'weather') {
+                        ctx.beginPath();
+                        ctx.arc(cx - 10, cy - 8, 22, 0, Math.PI * 2);
+                        ctx.fill();
+                        drawRoundedRectPath(ctx, cx - 32, cy - 2, 68, 30, 15);
+                        ctx.fill();
+                    } else if (b.type === 'alarm') {
+                        ctx.beginPath();
+                        ctx.arc(cx, cy + 4, 34, Math.PI, 0, false);
+                        ctx.lineTo(cx + 34, cy + 28);
+                        ctx.lineTo(cx - 34, cy + 28);
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.arc(cx, cy + 38, 9, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else if (b.type === 'pill') {
+                        ctx.save();
+                        ctx.translate(cx, cy);
+                        ctx.rotate(-Math.PI / 4);
+                        drawRoundedRectPath(ctx, -44, -20, 88, 40, 20);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(0, -20);
+                        ctx.lineTo(0, 20);
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+                });
+
+            } else if (currentIconStyle === 3) {
+                // STYLE 3: SONIC ALARM ORB (Futuristic Concentric Shockwaves & Geometric Core)
+                [175, 138, 102].forEach((r, idx) => {
+                    ctx.beginPath();
+                    ctx.arc(256, 256, r, 0, Math.PI * 2);
+                    ctx.lineWidth = idx === 2 ? 14 : 6;
+                    ctx.strokeStyle = idx === 0 ? 'rgba(34, 211, 238, 0.35)' : idx === 1 ? 'rgba(244, 63, 94, 0.55)' : '#22d3ee';
+                    if (idx === 1) ctx.setLineDash([18, 14]);
+                    else ctx.setLineDash([]);
+                    ctx.stroke();
+                });
+                ctx.setLineDash([]);
+
+                const coreGrad = ctx.createRadialGradient(230, 230, 10, 256, 256, 95);
+                coreGrad.addColorStop(0, '#38bdf8');
+                coreGrad.addColorStop(0.55, '#6366f1');
+                coreGrad.addColorStop(1, '#e11d48');
+                ctx.beginPath();
+                ctx.arc(256, 256, 88, 0, Math.PI * 2);
+                ctx.fillStyle = coreGrad;
+                ctx.shadowColor = 'rgba(244, 63, 94, 0.7)';
+                ctx.shadowBlur = 32;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                // Geometric Pulse Wave inside Orb
+                ctx.beginPath();
+                ctx.moveTo(192, 256);
+                ctx.lineTo(222, 256);
+                ctx.lineTo(240, 212);
+                ctx.lineTo(268, 300);
+                ctx.lineTo(288, 240);
+                ctx.lineTo(302, 256);
+                ctx.lineTo(320, 256);
+                ctx.lineWidth = 12;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+
+            } else {
+                // STYLE 4: MINIMAL NEON CREST (Flagship 'A' + Pulse Monogram)
+                const crestGrad = ctx.createLinearGradient(120, 100, 392, 412);
+                crestGrad.addColorStop(0, '#22d3ee');
+                crestGrad.addColorStop(0.5, '#3b82f6');
+                crestGrad.addColorStop(1, '#ec4899');
+
+                ctx.shadowColor = 'rgba(59, 130, 246, 0.7)';
+                ctx.shadowBlur = 28;
+                ctx.beginPath();
+                ctx.moveTo(256, 110);
+                ctx.lineTo(376, 386);
+                ctx.lineTo(316, 386);
+                ctx.lineTo(256, 238);
+                ctx.lineTo(196, 386);
+                ctx.lineTo(136, 386);
+                ctx.closePath();
+                ctx.fillStyle = crestGrad;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                // Glowing Crossbar Wave
+                ctx.beginPath();
+                ctx.moveTo(172, 305);
+                ctx.lineTo(230, 305);
+                ctx.lineTo(256, 268);
+                ctx.lineTo(282, 305);
+                ctx.lineTo(340, 305);
+                ctx.lineWidth = 16;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+
+                // Top Star Sparkle
+                ctx.beginPath();
+                ctx.arc(256, 110, 12, 0, Math.PI * 2);
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+            }
+
+            ctx.restore();
+        }
+
+        function downloadAppIcon(resolution = 512) {
+            const offscreen = document.createElement('canvas');
+            renderAppIconCanvas(resolution, offscreen);
+
+            offscreen.toBlob(blob => {
+                if (!blob) return;
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `AuraOS_App_Icon_${resolution}x${resolution}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast(`Downloaded ${resolution}×${resolution} PNG App Icon!`, 'ph-download-simple');
+            }, 'image/png');
         }
 
         let toastTimeout = null;
@@ -1845,6 +2731,9 @@ window.addFlags(
             renderReminders();
             renderMedicines();
             fetchChittagongWeather(false);
+            renderAppIconCanvas(512);
+            // Hide icon studio modal on initial load so user goes straight to dashboard
+            closeIconStudio();
 
             // Unlock background keep-alive & WakeLock on first user tap anywhere
             document.body.addEventListener('pointerdown', () => {
@@ -1853,7 +2742,9 @@ window.addFlags(
 
             setInterval(() => {
                 updateLiveClock();
+                checkAutomaticMidnightMedicineReset();
                 tickReminders();
+                checkMissedMedicineDeadlines();
             }, 1000);
 
             setInterval(() => {
